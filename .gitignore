@@ -1,0 +1,15 @@
+node_modules/
+.DS_Store
+.vercel
+
+# How the site is made, rather than part of it. All of this stays on disk and
+# keeps working locally — it is simply not what the repository publishes.
+docs/
+experiments/
+scripts/
+package.json
+package-lock.json
+
+# The art-direction target for the polish system. 2.4 MB, and the page never
+# loads it.
+assets/generated/nadir-six-shot-reference-v1.png

@@ -1,0 +1,218 @@
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: auto; background: var(--abyss, #031014); -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  min-width: 20rem;
+  color: var(--bone, #e6eadf);
+  background: var(--abyss, #031014);
+  font-family: var(--body, "Avenir Next", "Helvetica Neue", Arial, sans-serif);
+  /* 300 over a live render is a hairline: the stroke is thinner than the noise
+     it sits on, so the word disappears into the water rather than being read
+     against it. 400 is the lightest weight that survives the grain pass. */
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: var(--lh-body, 1.68);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+body.menu-open { overflow: hidden; }
+::selection { color: var(--abyss, #031014); background: var(--biolume, #75d8cc); }
+img { display: block; max-width: 100%; }
+a { color: inherit; text-decoration: none; }
+button { color: inherit; font: inherit; }
+h1, h2, h3, p { margin-top: 0; }
+h1, h2, h3 { font-family: var(--display, "Outfit", "Avenir Next", "Helvetica Neue", sans-serif); font-weight: 400; }
+button, a { -webkit-tap-highlight-color: transparent; }
+:focus-visible { outline: 2px solid var(--biolume, #75d8cc); outline-offset: 5px; }
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
+}
+.skip-link {
+  position: fixed; z-index: 100; left: 1rem; top: 1rem; padding: .7rem 1rem;
+  color: var(--abyss, #031014); background: var(--bone, #e6eadf); transform: translateY(-160%);
+  transition: transform .3s var(--ease-out, cubic-bezier(.16, 1, .3, 1));
+}
+.skip-link:focus { transform: none; }
+
+/* ============================================================ type ladder
+   Every piece of text on the site picks one of these rungs. Nothing sets a
+   bare font-size in a beat stylesheet any more; a beat may set position and
+   measure, but the size, tracking, colour and shadow come from here so the
+   five beats cannot drift apart the way they had. */
+
+.display {
+  font-family: var(--display, "Outfit", "Avenir Next", "Helvetica Neue", sans-serif);
+  font-weight: 400;
+  line-height: var(--lh-display, .96);
+  letter-spacing: var(--tr-display, -.03em);
+  text-transform: uppercase;
+  text-wrap: balance;
+  text-shadow: var(--shadow-display, 0 2px 34px rgba(1, 8, 11, .74));
+}
+.h-hero { font-size: var(--fs-display-lg, clamp(2.9rem, 6.2vw, 6.6rem)); }
+.h-sec  { font-size: var(--fs-display-md, clamp(2.1rem, 4.1vw, 4.2rem)); }
+.h-fin  { font-size: var(--fs-display-xl, clamp(2.9rem, 7vw, 7.4rem)); letter-spacing: var(--tr-display-xl, -.042em); line-height: .92; }
+.h-pull { font-size: var(--fs-display-sm, clamp(1.9rem, 3.5vw, 3.5rem)); line-height: 1.02; text-transform: none; }
+.h-sub {
+  font-family: var(--display, "Outfit", "Avenir Next", "Helvetica Neue", sans-serif);
+  font-size: var(--fs-h-sub, clamp(1.3rem, 1.85vw, 2.1rem));
+  font-weight: 400;
+  line-height: 1.12;
+  letter-spacing: var(--tr-sub, -.012em);
+  text-transform: none;
+  text-wrap: balance;
+  text-shadow: var(--shadow-display, 0 2px 34px rgba(1, 8, 11, .74));
+}
+
+.lead {
+  max-width: var(--measure-lead, 44ch);
+  font-size: var(--fs-lead, clamp(1rem, 1.15vw, 1.2rem));
+  line-height: var(--lh-lead, 1.62);
+  color: var(--ink-read, #c8d2ca);
+  text-shadow: var(--shadow-body, 0 1px 20px rgba(1, 8, 11, .88));
+}
+.body-lg {
+  max-width: var(--measure-body, 56ch);
+  font-size: var(--fs-body-lg, clamp(.9rem, 1.02vw, 1.06rem));
+  line-height: 1.7;
+  color: var(--ink-body, #aebdb8);
+  text-shadow: var(--shadow-body, 0 1px 20px rgba(1, 8, 11, .88));
+}
+.body {
+  max-width: var(--measure-body, 56ch);
+  font-size: var(--fs-body, .875rem);
+  line-height: var(--lh-body, 1.68);
+  color: var(--ink-body, #aebdb8);
+  text-shadow: var(--shadow-body, 0 1px 20px rgba(1, 8, 11, .88));
+}
+.body-sm {
+  max-width: var(--measure-note, 38ch);
+  font-size: var(--fs-body-sm, .8125rem);
+  line-height: 1.6;
+  color: var(--ink-quiet, #8e9c98);
+  text-shadow: var(--shadow-body, 0 1px 20px rgba(1, 8, 11, .88));
+}
+
+/* A figure the visitor is meant to read as the content. The old site set
+   985 hPa and 31.4 ppt at .55rem underneath their own label, which filed
+   the reading below the name of the reading. */
+.num {
+  font-family: var(--display, "Outfit", "Avenir Next", "Helvetica Neue", sans-serif);
+  font-size: var(--fs-num, clamp(1.7rem, 2.4vw, 2.6rem));
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: -.02em;
+  color: var(--bone, #e6eadf);
+  font-variant-numeric: tabular-nums;
+  text-shadow: var(--shadow-display, 0 2px 34px rgba(1, 8, 11, .74));
+}
+.num--sm { font-size: var(--fs-num-sm, clamp(1.15rem, 1.5vw, 1.6rem)); }
+.num small, .num .unit {
+  /* .42em of a rung whose own floor is 1.15rem resolved to about 7.7px — HPA,
+     UTC and M were the smallest text on the site, and they are the units that
+     make every figure above them mean anything. */
+  margin-left: .4em;
+  font-family: var(--body, "Avenir Next", "Helvetica Neue", Arial, sans-serif);
+  font-size: .52em;
+  font-weight: 600;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--bone-dim, #aebdb8);
+}
+
+.label, .kicker, .eyebrow {
+  font-size: var(--fs-label-sm, .6875rem);
+  line-height: 1.2;
+  font-weight: 600;
+  letter-spacing: var(--tr-label, .18em);
+  text-transform: uppercase;
+  color: var(--bone-dim, #aebdb8);
+  text-shadow: var(--shadow-label, 0 1px 16px rgba(1, 8, 11, .92));
+}
+.label--quiet { color: var(--muted, #a2b3b0); }
+.label--xs { font-size: var(--fs-label-xs, .5625rem); letter-spacing: var(--tr-label-wide, .3em); }
+.tabular { font-variant-numeric: tabular-nums; }
+
+/* ---------------------------------------------------------- section head
+   Index, name, hairline, depth. The kicker used to be one line of text with
+   a rule stuck to its front, which read as decoration; run across the full
+   column with the depth on the far side it reads as an instrument label and
+   tells you where you are in the descent without a heading having to. */
+.beat > .sec-head { margin-top: 8svh; }
+.sec-head {
+  /* Stops short of the fixed depth rail, which the depth figure on the far
+     side of the rule used to print straight through. */
+  padding-right: clamp(0rem, 3.4vw, 5rem);
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  margin-bottom: clamp(1.9rem, 5vh, 4.1rem);
+}
+.sec-head .k {
+  flex: 0 0 auto;
+  font-size: var(--fs-label-sm, .6875rem);
+  font-weight: 500;
+  letter-spacing: var(--tr-label, .18em);
+  text-transform: uppercase;
+  color: var(--muted, #a2b3b0);
+  text-shadow: var(--shadow-label, 0 1px 16px rgba(1, 8, 11, .92));
+}
+.sec-head .k b { color: var(--coral, #ff5a43); font-weight: 600; }
+.sec-head .k--depth { color: var(--bone-dim, #ced7d0); font-variant-numeric: tabular-nums; letter-spacing: var(--tr-label, .18em); }
+.sec-head .rule { flex: 1 1 auto; height: 1px; background: var(--line-soft, rgba(230, 234, 223, .09)); }
+
+.kicker { display: flex; align-items: center; gap: .8rem; }
+.kicker::before { content: ""; width: 2.5rem; height: 1px; background: var(--copper, #ad6844); }
+
+.page { position: relative; z-index: 10; width: 100%; max-width: 100%; overflow-x: clip; }
+
+/* ------------------------------------------------------------------ grid
+   One set of tracks for the whole page. A beat is a twelve-column grid
+   between the page gutters and every child names its columns; the default
+   below is full bleed, so anything not placed still lands on the gutters
+   rather than on an offset somebody picked by eye. */
+.grid, .beat {
+  display: grid;
+  grid-template-columns: repeat(var(--cols, 12), minmax(0, 1fr));
+  column-gap: var(--gutter, clamp(.85rem, 1.5vw, 1.75rem));
+  align-content: start;
+}
+.beat { position: relative; min-height: 138svh; padding: 18svh var(--pad, clamp(1.25rem, 3.6vw, 4rem)); }
+.beat > *, .grid > * { grid-column: 1 / -1; min-width: 0; }
+/* An absolutely-positioned grid child with a definite grid position takes
+   that grid area as its containing block — and the area is already inset by
+   --pad, so every `left: var(--pad)` on these blocks was insetting a second
+   time and putting the whole hero one gutter right of the sections below it. */
+.beat > .scene-scrim, .beat > .hero__meta, .beat > .hero__title,
+.beat > .current { grid-column: auto; }
+.beat + .beat { margin-top: -18svh; }
+.scene-scrim {
+  position: absolute; z-index: -1; pointer-events: none; inset: -22% -8%;
+  opacity: .9; filter: blur(1px);
+  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 15%, #000 86%, transparent);
+  mask-image: linear-gradient(to bottom, transparent, #000 15%, #000 86%, transparent);
+}
+.scene-scrim--hero { background: radial-gradient(75% 65% at 20% 42%, rgba(3,16,20,.88), rgba(3,16,20,.34) 60%, transparent); }
+.scene-scrim--left { background: radial-gradient(72% 60% at 18% 48%, rgba(3,16,20,.93), rgba(3,16,20,.30) 60%, transparent); }
+.scene-scrim--center { background: radial-gradient(60% 55% at 50% 48%, rgba(3,16,20,.86), rgba(3,16,20,.22) 72%, transparent); }
+.scene-scrim--right { background: radial-gradient(74% 64% at 82% 48%, rgba(3,16,20,.92), rgba(3,16,20,.25) 62%, transparent); }
+/* Bottom bleed removed on this one only. Every scrim is inset -22% so it can
+   overhang its beat, which is invisible mid-page — but on the last beat that
+   overhang is 198px of real scrollHeight past the end of the content, and it is
+   scroll the camera has no key for. It put the document bottom a fifth of a
+   screen below the final camera position, which is exactly the gap that used to
+   carry the closing statement up out of frame. The scrim's own mask already
+   fades it out well before this edge, so nothing is lost but the phantom scroll. */
+/* This was rgba(3,16,20) at .58 rising to .82 — a near-opaque cold blue-black
+   wash across the middle of the frame, sat directly on top of the one shot in the
+   piece that is supposed to be beautiful. It is most of the reason the closing
+   beat read as dirty: a cold scrim over a warm image does not darken it, it greys
+   it, and it was greying a dawn. It existed to hold the closing copy over a pale
+   sky, and that job now belongs to the type itself — this block is set in bone at
+   display size with the lede at 500. What is left is a warm, low-opacity seat
+   that keeps the lede off the horizon without touching the sky above it. */
+.scene-scrim--closing { bottom: 0; background: radial-gradient(78% 54% at 50% 62%, rgba(22,8,14,.30), rgba(16,6,12,.44) 72%, transparent); }
+
+.reveal-group > *, .reveal-words .word { will-change: transform, opacity; }

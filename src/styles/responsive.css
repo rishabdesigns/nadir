@@ -1,0 +1,208 @@
+/* The ladder in tokens.css is clamp-based, so the sizes come down on their
+   own. What is left here is layout: things that have to change shape rather
+   than scale, and the two places where a figure needs its own breakpoint. */
+
+/* Fewer tracks as the page narrows, so the column spans below stay honest
+   instead of resolving against twelve tracks that no longer fit. */
+@media (max-width: 68rem) {
+  :root { --cols: 8; }
+  .hero__title .kicker { grid-column: 1 / 6; }
+  .hero h1 { grid-column: 1 / -1; }
+  .hero__support { grid-column: 1 / -1; }
+  .hero__meta > * { grid-column: 1 / 4; }
+  /* The four column spans that used to live here were inert: .current__row is a
+     flex row at this width, and grid-column means nothing to a flex child. The row
+     spaces itself. */
+  .beat__heading h2 { grid-column: 1 / 7; }
+  .beat__heading .lead { grid-column: 1 / 6; }
+  .descent > * { grid-column: 1 / -1; }
+  .waterline__heading, .record-stack { grid-column: 4 / -1; }
+  .archive__sticky { grid-column: 1 / 4; }
+  .archive__records { grid-column: 4 / -1; }
+  .first-light__copy { grid-column: 1 / -1; }
+  .footer p:first-child { grid-column: 1 / 4; }
+  .footer div { grid-column: 4 / 7; }
+  .footer p:last-child { grid-column: 7 / -1; }
+
+  .depth-rail { right: .65rem; }
+  .waterline { padding-left: 35vw; }
+  /* Stacked, these cards used to blanket the viewport: a 42svh plate with the
+     copy laid over it, three of them sticky at overlapping offsets, on backgrounds
+     at .96 to .98 alpha. Measured coverage of the crossing beat was 182 per cent
+     of the screen on a phone and 198 on a tablet — so the one transition the piece
+     is named for, going under the waterline, played out behind an opaque wall of
+     UI on every portrait device. The plate comes down to a third of the screen and
+     the card bodies stop being opaque, which leaves a live band of scene above and
+     below the card at every point in the stack. */
+  .record-card { grid-template-columns: 1fr; background: rgba(4, 22, 27, .68); }
+  .record-card--two { background: rgba(7, 38, 44, .66); }
+  .record-card--three { background: rgba(4, 29, 35, .7); }
+  /* A min-height cannot cap anything: these carry aspect-ratio 5/4, so on a 768
+     pixel tablet the plate resolved to 614 pixels — sixty per cent of the screen —
+     and the floor below it never came into play. The ratio is dropped on portrait
+     and the plate is given a height in screen units instead, so it stays a third
+     of the viewport whatever the device is wide. The images already cover. */
+  .record-card__image, .pressure-map { aspect-ratio: auto; height: 34svh; min-height: 0; }
+  /* 8rem of gradient ramp was sized against a 42svh plate. Over the shorter one it
+     reaches almost to the top edge and swallows the thing it is laid over — on the
+     pressure card that is the 985, which is the whole content of the panel. */
+  .record-card__copy { position: absolute; inset: auto 0 0; background: linear-gradient(transparent, rgba(3,16,20,.96)); padding-top: 4rem; border-left: 0; }
+  /* Centres the figure in the clear part of the plate rather than under the copy. */
+  .pressure-map { padding-bottom: 7rem; }
+  .archive__grid { gap: 4rem; }
+  .archive__records article { grid-template-columns: 5.5rem minmax(0, 1fr) auto; }
+  .current__row { gap: clamp(1.25rem, 4vw, 3rem); }
+}
+
+@media (max-width: 51.25rem) {
+  /* One column: every block goes full bleed between the gutters. */
+  /* The footer stacks to three centred rows below this width, so the band the
+     closing beat reserves for it has to grow with it — reserve 5.5rem for a
+     176px footer and the beat overflows one viewport by the difference, which
+     comes straight back as dead scroll under the call to action. */
+  :root { --nav-h: 4.75rem; --cols: 4; --footer-band: 11rem; }
+  .beat > *, .grid > *, .hero__meta > *, .hero__title > *, .hero h1,
+  .hero__support, .beat__heading h2, .beat__heading .lead, .descent > *,
+  .waterline__heading, .record-stack, .archive__sticky, .archive__records,
+  .first-light__copy, .footer p, .footer div { grid-column: 1 / -1; }
+  /* These spans were written for the twelve-track page grid and left behind when
+     the row became a two-track one of its own. `3 / 5` reaches two lines past the
+     end of a `1fr 1fr` grid, so the browser built two implicit tracks to hold it:
+     the row resolved to 112px 112px 26px 26px, the left column took both real
+     tracks at 250px wide and the right column was squeezed into 76px against the
+     edge. Swell sat left-aligned in that sliver while wind, being :last-child, was
+     right-aligned in it — which is the misalignment. Two columns, and the right one
+     is set right so the two stacks read as a pair of aligned columns. */
+  .current__cell:nth-child(odd) { grid-column: 1; }
+  .current__cell:nth-child(even) { grid-column: 2; align-items: flex-end; text-align: right; }
+  .nav__toggle { display: block; margin-left: auto; z-index: 2; }
+  .nav__links {
+    position: fixed; inset: 0; z-index: 1; display: flex; flex-direction: column; justify-content: center;
+    padding: 7rem var(--pad, clamp(1.25rem, 3.6vw, 4rem)); background: rgba(3,16,20,.97); opacity: 0; visibility: hidden;
+    transform: translateY(-1rem); transition: opacity .45s, visibility .45s, transform .55s var(--ease-out, cubic-bezier(.16, 1, .3, 1));
+  }
+  .nav__links a { justify-content: space-between; padding: 1.2rem 0; border-bottom: 1px solid var(--line, rgba(230, 234, 223, .18)); font-family: var(--display, "Outfit", "Avenir Next", "Helvetica Neue", sans-serif); font-size: 1.6rem; font-weight: 400; letter-spacing: -.02em; text-transform: none; }
+  .nav__links a em { font-size: var(--fs-label-sm, .6875rem); }
+  .nav__links a::after { display: none; }
+  .menu-open .nav__links { opacity: 1; visibility: visible; transform: none; }
+  .menu-open .nav__toggle i:first-of-type { top: 1.34rem; transform: rotate(45deg); }
+  .menu-open .nav__toggle i:last-of-type { top: 1.34rem; transform: rotate(-45deg); }
+  .depth-rail { display: none; }
+
+  .beat { min-height: 125svh; padding-block: 16svh; }
+  /* Restated because the .beat rule above is same-specificity and later in the
+     cascade than the one-viewport rule in experience.css. Without this the
+     closing beat gets 16svh of padding back, grows past a screen, and the dead
+     scroll that pushed the footer to centre returns on phones only. */
+  .first-light { min-height: 100svh; padding-block: 0; }
+  .beat + .beat { margin-top: -10svh; }
+  .sec-head { gap: .75rem; padding-right: 0; margin-bottom: clamp(1.6rem, 4vh, 2.6rem); }
+
+  .hero { min-height: 132svh; }
+  .hero__meta { top: calc(var(--nav-h, 5.5rem) + 4svh); }
+  .hero__title { top: 34svh; }
+  .hero h1 { max-width: 100%; line-height: .9; }
+  .hero h1 span:last-child { margin-left: 0; }
+  /* This asked a grid for flex-direction: column, which does nothing, so the
+     support block kept its eight desktop columns on a phone: the lead stayed
+     pinned to columns 1-4 — 156px of the 353px available — and set as five
+     narrow lines. Those extra lines pushed the call to action down into the
+     four readings below it, overlapping them by 13px on a 393x852 iPhone.
+     One column, so the lead uses the width it has and the link sits under it. */
+  .hero__support { margin-left: 0; grid-template-columns: minmax(0, 1fr); gap: 1.7rem; align-items: start; }
+  .hero__support .lead { grid-column: 1; }
+  .hero__support .round-link { grid-column: 1; margin-top: 0; }
+  /* Four figures will not sit on one phone line without shrinking below the
+     point of setting them as figures, so they go two up. */
+  .current { top: calc(100svh - 10.5rem); }
+  .current__row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.1rem 1.5rem; }
+
+  .beat__heading { max-width: 100%; }
+  /* The bento stacks: the large tile keeps its prominence on top, the three
+     readings sit under it two-up rather than shrinking to unreadable slivers. */
+  .bento { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-rows: minmax(12rem, 22svh); }
+  .tile--pressure { grid-column: 1 / -1; grid-row: auto; }
+  .tile--salt { grid-column: 1 / -1; grid-row: auto; }
+  .tile--light { grid-column: 1 / 2; grid-row: auto; }
+  .tile--memory { grid-column: 2 / 3; grid-row: auto; }
+
+  .waterline { min-height: 218svh; padding-left: var(--pad, clamp(1.25rem, 3.6vw, 4rem)); }
+  .waterline .sec-head { margin-top: 14svh; }
+  .waterline__heading { max-width: 100%; }
+  /* The 62svh floor here defeated the height cap above — the card sprang straight
+     back to two thirds of the screen. Its height is the plate plus the copy that
+     sits over it, and nothing more. */
+  .record-stack { margin-top: 14svh; }
+
+  .archive { min-height: auto; padding-top: 26svh; }
+  .archive__grid { grid-template-columns: 1fr; }
+  .archive__sticky { position: relative; top: auto; }
+  .archive__records { padding-right: 0; }
+  .archive__records article { min-height: 44svh; grid-template-columns: 4.5rem minmax(0, 1fr); }
+  .archive__records h3, .archive__records .body { grid-column: 2; }
+  .record__force { grid-column: 2; grid-row: 3; flex-direction: row; align-items: baseline; gap: .7rem; text-align: left; }
+
+  /* The blanket `.footer p` reset in the column list above never reached these
+     two: `.footer p:first-child` and `.footer p:last-child` in experience.css
+     carry an extra pseudo-class, so they outrank it and kept their desktop spans
+     of 1/5 and 10/-1 on a grid that is four tracks wide here. One overflowed its
+     track and the other fell out of the grid entirely. Restated at matching
+     specificity so all three children stack in one centred column. */
+  .footer { grid-template-columns: 1fr; justify-items: center; gap: .9rem; text-align: center; }
+  .footer p:first-child, .footer p:last-child { grid-column: 1; text-align: center; }
+  /* Byline and marks read as one unit when centred, so they keep a tighter
+     interval than the 1.75rem that separated four peer links. */
+  .footer div { flex-wrap: wrap; justify-content: center; gap: .8rem 1.15rem; }
+}
+
+@media (max-width: 35rem) {
+  .hero__title { top: 30svh; }
+  .hero__support .lead { max-width: 38ch; }
+  .current { top: calc(100svh - 10rem); }
+  .descent__line { max-width: 22ch; }
+  .archive__records article { grid-template-columns: 1fr; gap: .8rem; }
+  .record__stamp, .archive__records h3, .archive__records .body, .record__force { grid-column: 1; grid-row: auto; }
+  .record__stamp i { max-width: 3rem; }
+}
+
+/* Short viewports.
+
+   The hero's first screen holds a fixed amount of type inside a band that
+   shrinks with the viewport: the band runs from .hero__title's top to where
+   .current is pinned above the fold. On a 375x667 phone that band is 307px and
+   the type needs 340px, so the call to action sat on top of the four readings.
+   Widening the lead fixed the wrap but not this — the arithmetic is about
+   height, and no width change buys height back.
+
+   Every rule below buys a few pixels of that band and nothing else. The band is
+   only comfortable above roughly 48rem of height, so taller phones keep the
+   original, more generous spacing. */
+@media (max-width: 51.25rem) and (max-height: 48rem) {
+  /* The station block moves up into the space under the nav, which is the only
+     slack above the headline. */
+  .hero__meta { top: calc(var(--nav-h, 4.75rem) + 2svh); }
+  /* 1.5rem between the coordinates and the timestamp is a desktop interval. On
+     a 568px screen it was the last three pixels of the overlap. */
+  .hero__meta .eyebrow { margin-bottom: .85rem; }
+  .stat { gap: .35rem; }
+  .hero__title { top: 29svh; }
+
+  /* Shaving offsets alone could not find 35px without the headline landing on
+     the station block above it, so the type comes down a step too. At 375px the
+     headline still sets on three lines and the lead on three — the measure is
+     unchanged, the setting is just smaller. */
+  .hero h1 { font-size: clamp(1.85rem, 8.6vw, 2.15rem); }
+  .hero__support .lead { font-size: .95rem; line-height: 1.56; }
+
+  .hero__title .kicker { margin-bottom: .75rem; }
+  .hero__support { margin-top: .9rem; gap: .75rem; }
+  .round-link i { width: 2.6rem; height: 2.6rem; font-size: 1rem; }
+  .current { top: calc(100svh - 9.5rem); }
+  .current__row { gap: .8rem 1.5rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; }
+  .record-card__image img { transform: none !important; }
+}

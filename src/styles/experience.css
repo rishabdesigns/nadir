@@ -1,0 +1,402 @@
+#world, .world-fallback, .underwash, .grain, .vignette {
+  position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none;
+}
+#world { z-index: 0; background: var(--abyss, #031014); }
+.world-fallback {
+  z-index: 0; opacity: 0; background:
+    linear-gradient(90deg, rgba(3,16,20,.2), rgba(3,16,20,.1)),
+    url("../../assets/generated/nadir-cliff-signal.webp") 68% center / cover no-repeat;
+  transition: opacity 1s;
+}
+.no-webgl .world-fallback { opacity: 1; }
+.no-webgl #world { display: none; }
+.underwash { z-index: 2; background: rgba(3, 37, 45, .68); opacity: 0; mix-blend-mode: color; }
+.grain {
+  z-index: 52; opacity: .065; mix-blend-mode: soft-light;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.9'/%3E%3C/svg%3E");
+}
+.webgl-ready .grain { opacity: .018; }
+.vignette { z-index: 51; background: radial-gradient(110% 88% at 50% 44%, transparent 45%, rgba(0,5,7,.68) 100%); }
+.webgl-ready .vignette { opacity: .3; }
+.scene-stats {
+  position: fixed; z-index: 80; right: 1rem; bottom: 1rem; min-width: 9.5rem;
+  padding: .8rem 1rem; white-space: pre; border: 1px solid rgba(230,234,223,.22);
+  color: rgba(230,234,223,.72); background: rgba(3,16,20,.74); backdrop-filter: blur(12px);
+  font: 500 .55rem/1.7 ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: .12em;
+  pointer-events: none;
+}
+.loader {
+  position: fixed; z-index: 90; inset: 0; display: grid; place-content: center;
+  grid-template-columns: minmax(13rem, 24rem) auto; gap: .65rem 1rem; padding: 2rem;
+  color: var(--bone, #e6eadf); background: var(--abyss, #031014); transition: opacity .9s var(--ease-io, cubic-bezier(.65, 0, .35, 1)), visibility .9s;
+}
+.loader.is-done { opacity: 0; visibility: hidden; }
+.loader__mark { grid-column: 1 / -1; width: 3rem; height: 3rem; margin: 0 auto 2rem; position: relative; }
+.loader__mark i { position: absolute; border: 1px solid var(--bone, #e6eadf); border-radius: 50%; inset: 0; }
+.loader__mark i:nth-child(2) { inset: .45rem; border-color: var(--copper, #ad6844); }
+.loader__mark i:nth-child(3) { inset: 1rem; background: var(--coral, #ff5a43); border: 0; box-shadow: 0 0 1.5rem rgba(255,90,67,.45); }
+.loader p, .loader b { margin: 0; font-size: var(--fs-label-sm, .6875rem); font-weight: 500; letter-spacing: var(--tr-label, .18em); text-transform: uppercase; }
+.loader b { font-weight: 500; color: var(--bone-dim, #aebdb8); }
+.loader__track { height: 1px; background: var(--line, rgba(230, 234, 223, .18)); overflow: hidden; }
+.loader__track span { display: block; width: 100%; height: 100%; background: var(--coral, #ff5a43); transform: scaleX(0); transform-origin: left; }
+
+.nav {
+  position: fixed; z-index: 60; top: 0; left: 0; width: 100%; height: var(--nav-h, 5.5rem);
+  padding: 0 var(--pad, clamp(1.25rem, 3.6vw, 4rem)); display: flex; align-items: center; gap: 2rem;
+  transition: background .5s, transform .5s var(--ease-out, cubic-bezier(.16, 1, .3, 1)), border-color .5s;
+  border-bottom: 1px solid transparent;
+}
+.nav.is-stuck { background: rgba(3,16,20,.76); backdrop-filter: blur(16px); border-color: var(--line-soft, rgba(230, 234, 223, .09)); }
+.nav.is-hidden { transform: translateY(-101%); }
+.brand { display: flex; align-items: center; gap: .75rem; flex: 0 0 auto; }
+.brand svg { width: 2.05rem; height: 2.05rem; }
+.brand span { display: flex; align-items: center; line-height: 1; }
+.brand strong { font-family: var(--display, "Outfit", "Avenir Next", "Helvetica Neue", sans-serif); font-size: var(--fs-label-sm, .625rem); letter-spacing: var(--tr-label-wide, .22em); font-weight: 600; }
+.nav__links { margin-left: auto; display: flex; gap: clamp(1.3rem, 2.7vw, 3.2rem); }
+.nav__links a { display: flex; align-items: baseline; gap: .5rem; position: relative; font-size: var(--fs-label-sm, .6875rem); font-weight: 600; letter-spacing: var(--tr-label, .18em); text-transform: uppercase; color: var(--bone-dim, #ced7d0); text-shadow: var(--shadow-label, 0 1px 16px rgba(1, 8, 11, .92)); }
+.nav__links a::after { content: ""; position: absolute; left: 0; right: 0; bottom: -.65rem; height: 1px; background: var(--coral, #ff5a43); transform: scaleX(0); transition: transform .4s var(--ease-out, cubic-bezier(.16, 1, .3, 1)); }
+.nav__links a.is-active::after { transform: scaleX(1); }
+.nav__links em { color: var(--muted, #a2b3b0); font-size: var(--fs-label-xs, .625rem); font-weight: 500; font-style: normal; }
+.nav__toggle { display: none; width: 2.6rem; height: 2.6rem; padding: 0; border: 0; background: none; position: relative; }
+.nav__toggle i { position: absolute; left: .55rem; right: .55rem; height: 1px; background: var(--bone, #e6eadf); transition: transform .4s var(--ease-out, cubic-bezier(.16, 1, .3, 1)), top .4s; }
+.nav__toggle i:first-of-type { top: 1.1rem; }
+.nav__toggle i:last-of-type { top: 1.55rem; }
+
+.depth-rail {
+  position: fixed; z-index: 58; right: calc(var(--pad, clamp(1.25rem, 3.6vw, 4rem)) * .45); top: 50%; transform: translateY(-50%);
+  height: min(44vh, 25rem); display: grid; grid-template-columns: auto 1px auto; gap: .8rem; align-items: stretch;
+}
+.depth-rail__label { writing-mode: vertical-rl; font-size: var(--fs-label-xs, .625rem); letter-spacing: var(--tr-label-wide, .22em); text-transform: uppercase; font-weight: 500; color: var(--bone-dim, #ced7d0); text-shadow: var(--shadow-label, 0 1px 16px rgba(1, 8, 11, .92)); }
+.depth-rail__track { background: var(--line-soft, rgba(230, 234, 223, .09)); position: relative; overflow: hidden; }
+.depth-rail__track i { position: absolute; inset: 0; background: var(--biolume, #75d8cc); transform: translateY(calc((-1 + var(--progress)) * 100%)); transition: background .8s; }
+.depth-rail__points { display: flex; flex-direction: column; justify-content: space-between; }
+.depth-rail__points a { display: flex; align-items: center; gap: .45rem; min-width: 2.5rem; color: var(--bone-dim, #ced7d0); font-size: var(--fs-label-xs, .625rem); font-weight: 500; font-variant-numeric: tabular-nums; text-shadow: var(--shadow-label, 0 1px 16px rgba(1, 8, 11, .92)); }
+.depth-rail__points i { width: .28rem; height: .28rem; border: 1px solid currentColor; border-radius: 50%; transition: transform .35s, background .35s, color .35s; }
+.depth-rail__points a.is-active { color: var(--bone, #e6eadf); }
+.depth-rail__points a.is-active i { background: var(--coral, #ff5a43); border-color: var(--coral, #ff5a43); transform: scale(1.7); }
+
+/* ================================================================== hero */
+.hero { min-height: 142svh; padding-top: calc(var(--nav-h, 5.5rem) + 8svh); }
+.hero__meta {
+  position: absolute; left: var(--pad, clamp(1.25rem, 3.6vw, 4rem)); right: var(--pad, clamp(1.25rem, 3.6vw, 4rem)); top: calc(var(--nav-h, 5.5rem) + 6svh);
+  display: grid; grid-template-columns: repeat(var(--cols, 12), minmax(0, 1fr)); column-gap: var(--gutter, clamp(.85rem, 1.5vw, 1.75rem));
+}
+.hero__meta > * { grid-column: 1 / 4; }
+.hero__meta .eyebrow { display: flex; align-items: center; gap: .6rem; margin-bottom: 1.5rem; }
+.hero__meta .eyebrow i { width: .35rem; height: .35rem; border-radius: 50%; background: var(--coral, #ff5a43); box-shadow: 0 0 1rem var(--coral, #ff5a43); }
+
+/* A label over its figure, not two lines of the same running text. The
+   timestamp is the only reading that survives the whole descent, so it is
+   set as a figure and the words above it are the caption. */
+.stat { display: flex; flex-direction: column; gap: .5rem; margin: 0; }
+.stat__label { font-size: var(--fs-label-xs, .625rem); font-weight: 600; letter-spacing: var(--tr-label-wide, .22em); text-transform: uppercase; color: var(--muted, #a2b3b0); text-shadow: var(--shadow-label, 0 1px 16px rgba(1, 8, 11, .92)); }
+.stat .num { font-weight: 400; }
+
+.hero__title {
+  position: absolute; left: var(--pad, clamp(1.25rem, 3.6vw, 4rem)); right: var(--pad, clamp(1.25rem, 3.6vw, 4rem)); top: 38svh;
+  display: grid; grid-template-columns: repeat(var(--cols, 12), minmax(0, 1fr)); column-gap: var(--gutter, clamp(.85rem, 1.5vw, 1.75rem));
+}
+.hero__title .kicker { grid-column: 1 / 7; margin-bottom: 1.6rem; }
+/* Columns 1-9, and a character cap so the sentence sets as a block instead
+   of one thin line running the width of the screen. */
+.hero h1 { grid-column: 1 / 9; max-width: 20ch; margin: 0; line-height: .92; }
+.hero h1 span { display: block; }
+/* This was a 1px outline over a live camera. On the storm frames the second
+   half of the sentence simply vanished into the tower behind it, which is a
+   bad trade for a sentence that has to be read. The two-tone ranking it was
+   reaching for survives as a tonal step instead, which holds at every frame. */
+.hero h1 span:last-child { color: var(--ink-body, #cbd5ce); }
+/* Both of these used to carry margin-left: clamp(0rem, 6vw, 6.5rem) — a
+   decorative indent, not a column, and the reason the hero read as three
+   different left edges. They start on column 1 with everything else now. */
+.hero__support {
+  grid-column: 1 / 9; margin-top: clamp(2rem, 5vh, 3.4rem);
+  display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); column-gap: var(--gutter, 1.75rem);
+  align-items: start;
+}
+.hero__support .lead { grid-column: 1 / 5; grid-row: 1; margin: 0; }
+.hero__support .round-link { grid-column: 1 / 5; grid-row: 2; justify-self: start; margin-top: clamp(1.6rem, 3vh, 2.6rem); }
+.round-link { display: inline-flex; align-items: center; gap: 1rem; font-size: var(--fs-label-sm, .6875rem); font-weight: 600; text-transform: uppercase; letter-spacing: var(--tr-label, .18em); white-space: nowrap; text-shadow: var(--shadow-label, 0 1px 16px rgba(1, 8, 11, .92)); }
+.round-link i, .closing-link i { font-variant-emoji: text; }
+.round-link i { width: 3.2rem; height: 3.2rem; display: grid; place-items: center; font-size: 1.1rem; font-style: normal; border: 1px solid var(--line, rgba(230, 234, 223, .18)); border-radius: 50%; transition: background .4s, color .4s, transform .5s var(--ease-out, cubic-bezier(.16, 1, .3, 1)); }
+.round-link:hover i { color: var(--abyss, #031014); background: var(--bone, #e6eadf); transform: rotate(-45deg); }
+
+/* The four readings the piece is about, held inside the first viewport. */
+.current {
+  position: absolute; z-index: 4; left: var(--pad, clamp(1.25rem, 3.6vw, 4rem)); right: var(--pad, clamp(1.25rem, 3.6vw, 4rem));
+  top: calc(100svh - 7.25rem); padding-block: 1.15rem;
+  border-top: 1px solid var(--line-soft, rgba(230, 234, 223, .09));
+}
+/* Four readings on four column pairs, so they line up with the headline
+   above them rather than sitting at whatever a flex gap produced. */
+.current__row { display: flex; justify-content: space-between; align-items: flex-start; gap: 1.5rem; }
+.current__cell { display: flex; flex-direction: column; gap: .5rem; }
+.current__cell:last-child { text-align: right; align-items: flex-end; }
+.current__cell .num { font-weight: 400; }
+
+/* ============================================================== exposure */
+/* Heading on columns 1-8, its lede on 1-6, both capped in characters. */
+.beat__heading { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(var(--cols, 12), minmax(0, 1fr)); column-gap: var(--gutter, clamp(.85rem, 1.5vw, 1.75rem)); margin: 0 0 7svh; }
+.beat__heading h2 { grid-column: 1 / 8; max-width: 15ch; margin-bottom: 1.6rem; }
+.beat__heading .lead { grid-column: 1 / 6; }
+/* The reading is the content of the panel; it used to be filed underneath its
+   own name at .55rem, smaller than the caption describing it. */
+
+
+/* ------------------------------------------------------------------ bento
+   Four instruments, four different readouts. The old panel cropped one
+   photograph three times and called it four instruments. All four are drawn now:
+   a gauge is a thing that draws its reading, and a photograph of a room is not a
+   reading of anything. */
+.bento {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-auto-rows: minmax(14rem, 25svh);
+  gap: var(--gutter, clamp(.85rem, 1.5vw, 1.75rem));
+}
+.tile--pressure { grid-column: 1 / 3; grid-row: 1 / 3; }
+.tile--salt     { grid-column: 3 / 5; grid-row: 1 / 2; }
+.tile--light    { grid-column: 3 / 4; grid-row: 2 / 3; }
+.tile--memory   { grid-column: 4 / 5; grid-row: 2 / 3; }
+
+.tile {
+  position: relative; overflow: hidden; min-width: 0;
+  display: flex; flex-direction: column; justify-content: space-between; gap: 1.5rem;
+  padding: clamp(1.05rem, 1.5vw, 1.6rem);
+  border: 1px solid var(--line, rgba(230, 234, 223, .18));
+  background: rgba(4, 20, 25, .5);
+  transition: border-color .55s, background .55s, transform .6s var(--ease-out, cubic-bezier(.16, 1, .3, 1));
+}
+.tile:hover { border-color: rgba(230, 234, 223, .36); background: rgba(6, 28, 34, .62); transform: translateY(-3px); }
+.tile__art { position: absolute; inset: 0; overflow: hidden; }
+/* Copy sits on a floor of its own so a bright instrument cannot swallow it. */
+.tile::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(180deg, rgba(3,16,20,.18) 34%, rgba(3,16,20,.9));
+}
+.tile__top, .tile__foot { position: relative; z-index: 2; }
+.tile__top { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; }
+.tile__index { font-size: var(--fs-label-sm, .6875rem); font-weight: 600; letter-spacing: var(--tr-label, .18em); color: var(--copper-ink, #d68f62); text-shadow: var(--shadow-label, 0 1px 16px rgba(1, 8, 11, .92)); }
+.tile__foot h3 { margin: 0 0 .55rem; }
+.tile__desc { margin: 0 0 1rem; color: var(--ink-body, #cbd5ce); }
+.tile--salt .tile__desc, .tile--light .tile__desc, .tile--memory .tile__desc {
+  display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+}
+.tile__meter { height: 1px; background: var(--line, rgba(230, 234, 223, .18)); }
+.tile__meter i { display: block; width: calc(var(--meter, 0) * 100%); height: 100%; background: var(--coral, #ff5a43); transform-origin: left; transition: filter .5s; }
+.tile:hover .tile__meter i { filter: drop-shadow(0 0 .5rem var(--coral, #ff5a43)); }
+
+/* A — pressure: isobars closing on the low */
+.tile--pressure .tile__art { display: grid; place-items: center; }
+.isobar {
+  position: absolute; width: calc(7rem + var(--i, 0) * 5rem); aspect-ratio: 1;
+  border: 1px solid rgba(117, 216, 204, .24);
+  border-radius: 43% 57% 49% 51% / 60% 41% 59% 40%;
+  animation: isobar-turn calc(26s + var(--i, 0) * 6s) linear infinite;
+  transition: border-color .6s, transform .9s var(--ease-out, cubic-bezier(.16, 1, .3, 1));
+}
+.isobar:nth-child(1) { --i: 0; }
+.isobar:nth-child(2) { --i: 1; animation-direction: reverse; }
+.isobar:nth-child(3) { --i: 2; }
+.isobar:nth-child(4) { --i: 3; animation-direction: reverse; }
+.tile--pressure:hover .isobar { border-color: rgba(117, 216, 204, .5); transform: scale(.9); }
+@keyframes isobar-turn { to { transform: rotate(360deg); } }
+
+/* B — salt: a lattice that grows across the seam */
+.tile--salt .tile__art {
+  inset: -25%;
+  opacity: .45;
+  background-image:
+    repeating-linear-gradient(38deg, rgba(230,234,223,.13) 0 1px, transparent 1px 15px),
+    repeating-linear-gradient(-38deg, rgba(230,234,223,.09) 0 1px, transparent 1px 15px);
+  transition: transform 1.2s var(--ease-out, cubic-bezier(.16, 1, .3, 1)), opacity .6s;
+}
+.tile--salt:hover .tile__art { transform: scale(1.14) rotate(1.5deg); opacity: .85; }
+.crystal { position: absolute; width: .34rem; height: .34rem; background: rgba(230,234,223,.6); transform: rotate(45deg); transition: transform .8s var(--ease-out, cubic-bezier(.16, 1, .3, 1)); }
+.crystal:nth-child(1) { left: 22%; top: 38%; }
+.crystal:nth-child(2) { left: 61%; top: 24%; }
+.crystal:nth-child(3) { left: 78%; top: 58%; }
+.tile--salt:hover .crystal { transform: rotate(45deg) scale(2.1); }
+
+/* C — light: the lens turning */
+.beam {
+  position: absolute; inset: -45%;
+  background: conic-gradient(from 0deg, transparent 0 66%, rgba(255,90,67,.3) 77%, rgba(255,198,160,.5) 84%, transparent 91%);
+  filter: blur(7px);
+  animation: lens-turn 16s linear infinite;
+  transition: filter .6s;
+}
+.tile--light:hover .beam { animation-duration: 4.5s; filter: blur(3px); }
+@keyframes lens-turn { to { transform: rotate(360deg); } }
+
+/* D — memory: the vault's own capsules, hung from a rail
+   A cropped photograph of the archive used to sit here, which made this the one
+   panel in the row that was a picture rather than an instrument. These are the
+   same objects the camera passes at −24 m — glass body, copper caps, a lit core,
+   one suspension wire each — so the panel now shows the thing its caption is
+   describing instead of a view of the room it happens to be in. */
+/* Held well back at rest. Every panel in this row is a quiet instrument until it
+   is looked at — the salt lattice sits at .45 and the isobars at a quarter alpha —
+   and this one arrived at full strength, so it read as the loud tile in a set that
+   is meant to be even. The internal relationships are set below and stay fixed;
+   this is one dimmer over the whole drawing, so the row reads as one family. */
+.vault {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  opacity: .3;
+  transition: opacity .65s var(--ease-out, cubic-bezier(.16, 1, .3, 1));
+}
+.tile--memory:hover .vault { opacity: .95; }
+.vault__rail { stroke: var(--copper, #ad6844); stroke-width: 1; opacity: .45; }
+.capsule__wire { stroke: var(--copper, #ad6844); stroke-width: .9; opacity: .5; }
+.capsule__cap { fill: var(--copper, #ad6844); opacity: .8; }
+.capsule__glass { fill: rgba(117, 216, 204, .07); stroke: rgba(230, 234, 223, .26); stroke-width: .8; }
+.capsule__halo { fill: var(--biolume, #75d8cc); opacity: .1; transition: opacity .65s; }
+.capsule__core { fill: var(--biolume, #75d8cc); opacity: .7; transition: opacity .65s; }
+
+/* Hung objects under water swing; they do not spin or slide. The origin is the
+   top of each group's own box, which is exactly where its wire meets the rail, so
+   the swing pivots from the fixing rather than from the middle of the glass. */
+.capsule {
+  transform-box: fill-box; transform-origin: 50% 0;
+  animation: capsule-sway calc(8s + var(--i, 0) * 1.4s) ease-in-out infinite;
+  animation-delay: calc(var(--i, 0) * -1.7s);
+}
+@keyframes capsule-sway {
+  0%, 100% { transform: rotate(-1.4deg); }
+  50% { transform: rotate(1.4deg); }
+}
+/* Hover reads as the row waking up: the swing tightens and the cores come on. */
+.tile--memory:hover .capsule { animation-duration: calc(3s + var(--i, 0) * .55s); }
+.tile--memory:hover .capsule__core { opacity: 1; }
+.tile--memory:hover .capsule__halo { opacity: .28; }
+.tideline {
+  position: absolute; left: 0; right: 0; top: 58%; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(117,216,204,.8), transparent);
+  transform: scaleX(0); transform-origin: left;
+  transition: transform .9s var(--ease-out, cubic-bezier(.16, 1, .3, 1));
+}
+.tile--memory:hover .tideline { transform: scaleX(1); }
+
+/* =============================================================== descent */
+.descent { align-content: center; justify-items: center; text-align: center; }
+.descent > * { grid-column: 3 / 11; justify-self: center; }
+.depth-stamp { display: flex; flex-direction: column; align-items: center; gap: .7rem; margin: 0; }
+.descent__line { max-width: 26ch; margin: 5svh auto 0; }
+.inline-aperture { display: inline-block; width: 1.6em; height: .62em; margin: 0 .12em; vertical-align: .05em; border-radius: 999px; background: url("../../assets/generated/nadir-cliff-signal.webp") 68% 48% / 300%; box-shadow: inset 0 0 0 1px var(--line, rgba(230, 234, 223, .18)); }
+.descent__note { max-width: var(--measure-note, 38ch); margin: 3rem auto 0; }
+
+/* ============================================================= waterline */
+.waterline { min-height: 225svh; }
+.waterline .sec-head { margin-top: 20svh; }
+/* Columns 6-13: the copy sits in the right half of the grid so the camera
+   keeps the left, which is what the 46vw padding was reaching for. */
+.waterline__heading { grid-column: 6 / -1; }
+.waterline__heading h2 { max-width: 13ch; margin-bottom: 1.6rem; }
+.record-stack { grid-column: 6 / -1; margin-top: 8svh; padding-bottom: 12svh; }
+.record-card { position: sticky; top: 17svh; width: min(100%, 43rem); display: grid; grid-template-columns: minmax(0, 1fr) minmax(13.5rem, .62fr); background: rgba(4,22,27,.96); border: 1px solid var(--line, rgba(230, 234, 223, .18)); box-shadow: 0 1.4rem 3.6rem rgba(0,0,0,.5); transform-origin: center top; overflow: hidden; }
+.record-card + .record-card { margin-top: 14svh; }
+.record-card--two { top: 20svh; background: rgba(7,38,44,.97); }
+.record-card--three { top: 23svh; background: rgba(4,29,35,.98); }
+.record-card__image { aspect-ratio: 5 / 4; overflow: hidden; }
+.record-card__image img { width: 100%; height: 100%; object-fit: cover; transform: scale(1.06); filter: saturate(.68) contrast(1.05); }
+.record-card__copy { display: flex; flex-direction: column; justify-content: center; gap: .8rem; padding: clamp(1.2rem, 1.8vw, 1.9rem); border-left: 1px solid var(--line, rgba(230, 234, 223, .18)); }
+/* Name of the record on one side, its place in the set on the other. */
+.record-card__meta { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; margin: 0; padding-bottom: .8rem; border-bottom: 1px solid var(--line-soft, rgba(230, 234, 223, .09)); }
+.record-card__meta span:first-child { color: var(--copper-ink, #d68f62); }
+.record-card__copy h3 { margin: 0; }
+.record-card__copy p:last-child { margin: 0; color: var(--ink-body, #cbd5ce); }
+.pressure-map { position: relative; aspect-ratio: 5 / 4; display: grid; place-items: center; overflow: hidden; background: radial-gradient(circle, rgba(117,216,204,.12), transparent 55%); }
+.pressure-map i { position: absolute; width: calc(5.5rem + var(--i, 0) * 3.2rem); aspect-ratio: 1; border: 1px solid rgba(117,216,204,.25); border-radius: 43% 57% 49% 51% / 60% 41% 59% 40%; animation: pressure-rotate calc(16s + var(--i, 0) * 3s) linear infinite; }
+.pressure-map i:nth-child(1) { --i: 0; }
+.pressure-map i:nth-child(2) { --i: 1; animation-direction: reverse; }
+.pressure-map i:nth-child(3) { --i: 2; }
+.pressure-map i:nth-child(4) { --i: 3; animation-direction: reverse; }
+.pressure-map b { font-family: var(--display, "Outfit", "Avenir Next", "Helvetica Neue", sans-serif); font-size: clamp(2.4rem, 4vw, 4rem); font-weight: 400; letter-spacing: -.06em; font-variant-numeric: tabular-nums; }
+@keyframes pressure-rotate { to { transform: rotate(360deg); } }
+
+/* =============================================================== archive */
+.archive { min-height: 360svh; padding-top: 24svh; }
+.archive__grid { display: grid; grid-template-columns: repeat(var(--cols, 12), minmax(0, 1fr)); column-gap: var(--gutter, clamp(.85rem, 1.5vw, 1.75rem)); align-items: start; }
+.archive__sticky { grid-column: 1 / 5; position: sticky; top: 20svh; }
+.archive__sticky h2 { max-width: 11ch; margin-bottom: 1.6rem; }
+.archive__records { grid-column: 6 / -1; }
+.archive__gauge { display: flex; align-items: center; gap: 1rem; margin-top: 3rem; }
+.archive__gauge i { flex: 0 0 5rem; height: 1px; background: var(--line, rgba(230, 234, 223, .18)); position: relative; overflow: hidden; }
+.archive__gauge i::after { content: ""; position: absolute; inset: 0; background: var(--biolume, #75d8cc); transform: scaleX(.72); transform-origin: left; }
+.archive__gauge .num { color: var(--biolume, #75d8cc); }
+.archive__gauge .num small { color: var(--biolume, #75d8cc); opacity: .9; }
+
+/* Clear of the depth rail, which the force column used to run under. */
+.archive__records { padding-right: clamp(0rem, 4.2vw, 5.75rem); }
+.archive__records article {
+  min-height: 62svh; padding: 3.5rem 0; border-top: 1px solid var(--line, rgba(230, 234, 223, .18));
+  display: grid; grid-template-columns: 7rem minmax(0, 1fr) auto;
+  gap: .9rem 2rem; align-content: center;
+}
+.record__stamp { grid-column: 1; grid-row: 1 / span 2; display: flex; align-items: baseline; gap: .6rem; margin: 0; font-size: var(--fs-label-sm, .6875rem); font-weight: 600; letter-spacing: .14em; color: var(--muted, #a2b3b0); text-shadow: var(--shadow-label, 0 1px 16px rgba(1, 8, 11, .92)); }
+.record__stamp i { flex: 1 1 auto; height: 1px; background: var(--line, rgba(230, 234, 223, .18)); }
+.archive__records h3 { grid-column: 2; grid-row: 1; margin: 0; }
+.archive__records .body { grid-column: 2; grid-row: 2; margin: 0; }
+.record__force { grid-column: 3; grid-row: 1 / span 2; display: flex; flex-direction: column; align-items: flex-end; gap: .5rem; margin: 0; text-align: right; }
+.record__force .num { color: var(--copper-ink, #d68f62); }
+.record__force .num small { color: var(--copper-ink, #d68f62); opacity: .9; }
+
+/* =========================================================== first light */
+/* The journey used to end on the footer, and the geometry says why. ScrollRig
+   anchors every camera key to its section's *centre*:
+   anchor = offsetTop + height/2 - viewport/2, while the page bottoms out at
+   offsetTop + height - viewport. At the old 175svh those differ by 37.5svh —
+   a third of a screen of scrolling left over after the camera has already
+   arrived at first light. That leftover is what carried the closing statement up
+   off the top of the frame and slid the footer into the middle of it.
+   Solve the two for equality and the answer is exactly one viewport: at
+   height = 100svh the section's centre *is* the bottom of the document, so the
+   camera's last key and the reader's last scroll position are the same place.
+   Every value below exists to keep this section at exactly 100svh — the padding
+   is zero because the beat's default 18svh would push it past one screen. */
+.first-light { min-height: 100svh; align-content: end; padding-top: 0; padding-bottom: 0; text-align: center; }
+/* One viewport less the footer band, so the closing statement and its action sit
+   centred in what remains and the footer sits on the bottom edge of the page
+   rather than in the middle of the frame. */
+.first-light__copy {
+  grid-column: 2 / 12; margin: 0 auto;
+  min-height: calc(100svh - var(--footer-band, 5.5rem));
+  display: grid; align-content: center; justify-items: center;
+}
+.first-light__copy .kicker { justify-content: center; }
+.first-light__copy h2 { margin: 2.6rem 0; }
+/* The only frame where the scene goes bright behind the copy — dawn puts a
+   pale sky exactly where the closing paragraph sits, so this one block needs
+   more contrast and a heavier glow than the dark-water rungs. */
+.first-light__copy .lead {
+  /* Three stacked glows lived here, because this is the one frame where the sky
+     goes pale behind the copy. They are gone with the rest; what replaces them is
+     the fact that this line no longer has to be bone-on-bone — it sits at 500 over
+     the tower and the water, both of which stay dark through dawn. */
+  margin: 0 auto; color: var(--bone, #e6eadf); font-weight: 500;
+}
+.first-light__copy .kicker { color: var(--bone, #e6eadf); }
+.closing-link { display: inline-flex; align-items: center; gap: 1.2rem; margin-top: 3rem; padding: .7rem .7rem .7rem 1.5rem; color: var(--abyss, #031014); background: var(--bone, #e6eadf); border-radius: 999px; font-size: var(--fs-label-sm, .6875rem); font-weight: 600; letter-spacing: var(--tr-label, .18em); text-transform: uppercase; }
+.closing-link i { width: 2.8rem; height: 2.8rem; display: grid; place-items: center; border-radius: 50%; color: var(--bone, #e6eadf); background: var(--abyss, #031014); font-style: normal; transition: transform .45s var(--ease-out, cubic-bezier(.16, 1, .3, 1)); }
+.closing-link:hover i { transform: rotate(45deg); }
+.footer { grid-column: 1 / -1; width: 100%; margin-top: 0; min-height: var(--footer-band, 5.5rem); padding: 1.4rem 0; display: grid; grid-template-columns: repeat(var(--cols, 12), minmax(0, 1fr)); column-gap: var(--gutter, clamp(.85rem, 1.5vw, 1.75rem)); align-items: center; border-top: 1px solid var(--line-soft, rgba(230, 234, 223, .09)); text-align: left; }
+.footer p { margin: 0; max-width: none; }
+.footer p:first-child { grid-column: 1 / 5; }
+/* A byline and three marks, which is narrower than the text links this cell
+   used to hold — widening it wrapped the study line to its left onto two. */
+.footer div { grid-column: 5 / 10; justify-content: center; }
+.footer p:last-child { grid-column: 10 / -1; text-align: right; }
+.footer div { display: flex; align-items: baseline; gap: 1.4rem; font-size: var(--fs-label-sm, .6875rem); font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--bone-dim, #ced7d0); }
+/* The byline is not a link and should not read as one — it is the caption the
+   three destinations hang off, so it sits a step back in the ink ramp. */
+.footer__by > span:first-child { color: var(--muted, #a2b3b0); font-weight: 500; }
+/* Vendor marks, so they carry their own silhouette and no border or label of
+   ours. currentColor keeps them on the same ink ramp as the rest of the row,
+   and they lift to full bone on hover like every other link here. */
+.footer__social { display: inline-flex; align-items: center; gap: 1.1rem; }
+.footer__social a { display: inline-grid; place-items: center; width: 1.5rem; height: 1.5rem; color: var(--bone-dim, #ced7d0); opacity: .78; transition: opacity .3s, color .3s, transform .3s var(--ease-out, cubic-bezier(.16, 1, .3, 1)); }
+.footer__social svg { width: 1.05rem; height: 1.05rem; fill: currentColor; display: block; }
+.footer__social a:hover { opacity: 1; color: var(--bone, #e6eadf); transform: translateY(-2px); }
+.footer__social a:focus-visible { opacity: 1; color: var(--bone, #e6eadf); }
+.footer a:hover { color: var(--bone, #e6eadf); }

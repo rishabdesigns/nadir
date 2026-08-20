@@ -1,0 +1,9 @@
+# The deploy is the site: index.html, src/, assets/, vendor/ and the six studies
+# in experiments/. Everything below is how the site gets made, not part of it.
+node_modules/
+
+# Headless-Chrome harnesses. They drive a local dev server and write into docs/;
+# on a deployed host they are dead weight with no way to run.
+scripts/
+
+.DS_Store

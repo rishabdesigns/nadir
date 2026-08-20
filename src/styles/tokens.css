@@ -1,0 +1,106 @@
+:root {
+  --abyss: #031014;
+  --bone: #e6eadf;
+  --bone-dim: #ced7d0;
+  --muted: #a2b3b0;
+  --copper: #ad6844;
+  /* Copper is an architecture colour — it is correct on a rail, a shelf edge and
+     a hairline, where it sits against its own specular. Set as *type* at 10px it
+     is a dim brown on near-black and the least legible thing on the site. This is
+     the same hue carried up to where small caps can hold it; geometry keeps the
+     value above. */
+  --copper-ink: #d68f62;
+  --coral: #ff5a43;
+  --biolume: #75d8cc;
+  --line: rgba(230, 234, 223, .18);
+  --line-soft: rgba(230, 234, 223, .09);
+  --pad: clamp(1.25rem, 3.6vw, 4rem);
+  /* Twelve tracks between the gutters. Every block that carries copy names
+     its columns, so an eyebrow, a headline and a stat row cannot land on
+     three different left edges the way they had (64 / 64 / 168 at 1920). */
+  --cols: 12;
+  --gutter: clamp(.85rem, 1.5vw, 1.75rem);
+  --nav-h: 5.5rem;
+  /* The height the footer reserves at the very bottom of the page. The closing
+     beat subtracts it from one viewport so the call to action centres in what is
+     left rather than in the whole screen. */
+  --footer-band: 5.5rem;
+  --display: Futura, "Avenir Next", "Helvetica Neue", sans-serif;
+  --body: "Avenir Next", "Helvetica Neue", Arial, sans-serif;
+  --ease-out: cubic-bezier(.16, 1, .3, 1);
+  --ease-io: cubic-bezier(.65, 0, .35, 1);
+  --progress: 0;
+
+  /* ---------------------------------------------------------- type scale
+     One ladder for the whole site. Before this every beat invented its own
+     sizes, which is why the archive's record titles came out at 6.2rem
+     against a 7rem section heading and the two read as equals. The rungs
+     below step at roughly 1.3x, and each one has exactly one job:
+
+       display-xl  the closing statement, and nothing else — the climax
+       display-lg  the hero
+       display-md  a section heading
+       display-sm  a mid-beat pull statement (the descent line)
+       h-sub       a record or card title, plainly subordinate to display-md
+       num         a figure that is the content, not a footnote
+     */
+  --fs-display-xl: clamp(2.7rem, 6vw, 5.75rem);
+  --fs-display-lg: clamp(2.5rem, 4.7vw, 4.5rem);
+  --fs-display-md: clamp(1.9rem, 3.4vw, 3.3rem);
+  --fs-display-sm: clamp(1.7rem, 2.7vw, 2.6rem);
+  --fs-h-sub: clamp(1.15rem, 1.5vw, 1.5rem);
+
+  --fs-num: clamp(1.7rem, 2.4vw, 2.6rem);
+  --fs-num-sm: clamp(1.15rem, 1.5vw, 1.6rem);
+
+  --fs-lead: clamp(1.05rem, 1.2vw, 1.25rem);
+  --fs-body-lg: clamp(.95rem, 1.06vw, 1.1rem);
+  --fs-body: .9375rem;
+  --fs-body-sm: .875rem;
+
+  /* Every rung below 11px is gone. These labels are set in caps at .2em+ over a
+     moving render; at 9px that is a texture, not a word you can read, and no
+     amount of colour rescues it. */
+  --fs-label-sm: .6875rem;
+  --fs-label-xs: .625rem;
+
+  --lh-display: .96;
+  --lh-lead: 1.62;
+  --lh-body: 1.68;
+
+  --tr-display-xl: -.042em;
+  --tr-display: -.03em;
+  --tr-sub: -.012em;
+  /* Tracking this wide stops being letter-spacing and starts being letter
+     separation: at .3em the eye reads eight characters, not one word. Both rungs
+     come in, which buys back stroke density at the same size. */
+  --tr-label: .18em;
+  --tr-label-wide: .22em;
+
+  /* Measures in ch, not rem. The old 28-35rem caps ran 72-90 characters,
+     which is a newspaper column and a half. */
+  --measure-lead: 44ch;
+  --measure-body: 56ch;
+  --measure-note: 38ch;
+
+  /* These were three black glows — 34px, 20px and 16px of blur — carried by
+     every line on the site to hold copy over the live render. They worked, and
+     they cost the thing they were protecting: a smudge of dark haze sitting under
+     every word, visible as a grey bruise wherever the copy crossed open water.
+     They are off. Contrast is now bought where it does not smear — in the ink
+     ramp below, in weight, and in size — which is also the only place it can be
+     bought without putting a second, softer object on screen behind the type. */
+  --shadow-display: none;
+  --shadow-body: none;
+  --shadow-label: none;
+
+  /* A tonal ramp, so hierarchy survives even where two rungs share a size. The
+     whole ramp moves up: it was authored against those glows, so every rung was
+     set as dark as it could get away with *given* a black halo underneath it.
+     Without the halo the same values are simply grey text on grey water. The
+     steps between rungs are preserved, so the hierarchy is unchanged — only the
+     floor moves. */
+  --ink-read: #dee5dd;
+  --ink-body: #cbd5ce;
+  --ink-quiet: #b0bcb7;
+}
